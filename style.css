@@ -1,0 +1,60 @@
+body {
+    background-color: #fce4ec; /* 淡淡的粉色背景 */
+    font-family: 'Microsoft YaHei', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+}
+
+h1 {
+    color: #880e4f;
+    font-size: 1.5rem;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 30px;
+    margin: 20px 0;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content p {
+    font-size: 1.2rem;
+    color: #333;
+    line-height: 1.6;
+}
+
+button {
+    background-color: #f06292;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+button:hover {
+    background-color: #ec407a;
+    transform: scale(1.05);
+}
+
+.date-text {
+    color: #888;
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
