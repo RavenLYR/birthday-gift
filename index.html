@@ -3,21 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>给特别的你</title>
+    <title>Toolbox</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="top-bar">
+        <span>🏠 米米妙妙屋</span>
+    </div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
 
-    <div class="container">
-        <h1>每天一张小纸条 📅</h1>
-        <div class="card">
-            <div class="content">
-                <p id="message">点击下方按钮抽取今日份惊喜...</p>
+    <div id="view-health" class="view-section active-view">
+        <header>
+            <h1>🌿 健康小助手</h1>
+            <p>Today is a good day to be healthy</p>
+        </header>
+
+        <div class="card-container">
+            <div class="health-icon-group">🥑</div>
+            
+            <div class="health-stats">
+                <span class="stat-item">💧 水分</span>
+                <span class="stat-item">💤 睡眠</span>
+                <span class="stat-item">🧘‍♀️ 心态</span>
+            </div>
+
+            <div class="health-card">
+                <p id="health-display">上面三个图标只是装饰，没想到吧<br>但这个不是 👇</p>
+            </div>
+            
+            <button class="action-btn health-btn" onclick="getHealthTip()">获取今日贴士</button>
+        </div>
+    </div>
+
+    <div id="view-book" class="view-section" style="display: none;">
+        <header>
+            <h1>📖 答案之书</h1>
+            <p>Ask the Universe</p>
+        </header>
+        
+        <div id="book-input-area">
+            <div style="font-size: 60px; margin-bottom: 20px;">🔮</div>
+            <input type="text" id="question-input" placeholder="输入心中的疑惑..." autocomplete="off">
+            <button class="action-btn book-btn" onclick="askBook()">翻开书页</button>
+        </div>
+
+        <div id="book-loading" style="display: none;">
+            <div class="signal-container">
+                <div class="signal-wave wave1"></div>
+                <div class="signal-wave wave2"></div>
+                <div class="signal-wave wave3"></div>
+                <div class="signal-core">🔮</div>
+            </div>
+            <p class="loading-text">正在连接宇宙信号...</p>
+        </div>
+
+        <div id="book-result" style="display: none;">
+            <div class="answer-card">
+                <div class="card-label">YOUR QUESTION</div>
+                <div style="color: #666; margin-bottom: 20px;" id="q-text">...</div>
+                <div style="height: 1px; background: #eee; margin: 10px 0;"></div>
+                <div class="card-label" style="margin-top: 20px;">THE ANSWER</div>
+                <div class="answer-text" id="a-text">...</div>
+            </div>
+            <button class="outline-btn" onclick="resetBook()">再问一个</button>
+        </div>
+    </div>
+
+    <div id="view-chat" class="view-section" style="display: none;">
+        <header>
+            <h1>💬 随便聊聊</h1>
+            <p>Topic Blind Box</p>
+        </header>
+        
+        <div class="chat-container">
+            <div class="stack-bg stack-1"></div>
+            <div class="stack-bg stack-2"></div>
+
+            <div id="topic-cover" class="topic-card cover" onclick="drawTopic()">
+                <span style="font-size: 50px; margin-bottom: 10px;">🃏</span>
+                <h2 style="margin: 0;">话题抽卡</h2>
+                <p style="opacity: 0.8; font-size: 0.9rem;">Click to Draw</p>
+            </div>
+            
+            <div id="topic-content" class="topic-card content" style="display: none;">
+                <span class="topic-tag">Topic #<span id="topic-id">1</span></span>
+                <p id="topic-text">...</p>
+                <div style="flex-grow: 1;"></div> <button class="small-btn" onclick="resetTopic()">换一个话题</button>
             </div>
         </div>
-        <button id="btn" onclick="showDailyMessage()">✨ 抽取今日纸条 ✨</button>
-        <p id="date-display" class="date-text"></p>
     </div>
+
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('health')">
+            <span class="icon">🌿</span>
+            <span class="label">健康</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('book')">
+            <span class="icon">📖</span>
+            <span class="label">答案</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('chat')">
+            <span class="icon">💬</span>
+            <span class="label">聊聊</span>
+        </button>
+    </nav>
 
     <script src="script.js"></script>
 </body>

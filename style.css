@@ -1,60 +1,673 @@
+:root {
+    --primary-green: #4caf50;
+    --primary-purple: #9c27b0;
+    --primary-orange: #ff9800;
+    --nav-height: 80px;
+    --bg-pattern: radial-gradient(#e0e0e0 1px, transparent 1px);
+}
+
 body {
-    background-color: #fce4ec; /* 淡淡的粉色背景 */
     font-family: 'Microsoft YaHei', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    /* 1. 背景不再单调：增加波点纹理 */
+    background-color: #f9f9f9;
+    background-image: var(--bg-pattern);
+    background-size: 20px 20px;
     margin: 0;
+    padding: 0;
+    padding-bottom: var(--nav-height);
+    min-height: 100vh;
+    box-sizing: border-box;
+    overflow-x: hidden; /* 防止左右晃动 */
 }
 
-.container {
-    text-align: center;
-    width: 90%;
-    max-width: 400px;
-}
-
-h1 {
-    color: #880e4f;
-    font-size: 1.5rem;
-}
-
-.card {
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    padding: 30px;
-    margin: 20px 0;
-    min-height: 150px;
+/* 2. 让内容撑满屏幕 */
+.view-section {
+    min-height: 85vh; /* 强制占满高度 */
     display: flex;
+    flex-direction: column;
+    justify-content: space-evenly; /* 关键：元素在垂直方向均匀分布 */
     align-items: center;
-    justify-content: center;
+    padding: 20px 30px;
+    position: relative;
+    z-index: 1; /* 保证内容在装饰背景之上 */
 }
 
-.content p {
-    font-size: 1.2rem;
-    color: #333;
-    line-height: 1.6;
+/* 装饰性背景圆球 (用来填补空白) */
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    z-index: -1;
+    opacity: 0.4;
+}
+.blob-1 { width: 200px; height: 200px; top: -50px; left: -50px; background: #b2dfdb; }
+.blob-2 { width: 150px; height: 150px; bottom: 100px; right: -30px; background: #e1bee7; }
+
+/* Header 优化 */
+header { text-align: center; margin-bottom: 10px; }
+header h1 { font-size: 1.8rem; color: #333; margin-bottom: 5px; letter-spacing: 1px; }
+header p { color: #888; font-size: 0.95rem; }
+
+/* === Module 1: Health (仪表盘风格) === */
+.card-container {
+    display: flex; flex-direction: column; align-items: center; width: 100%;
 }
 
-button {
-    background-color: #f06292;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    font-size: 1rem;
+.health-icon-group {
+    font-size: 80px; margin-bottom: 20px;
+    filter: drop-shadow(0 10px 10px rgba(76,175,80,0.2));
+    animation: float 4s ease-in-out infinite;
+}
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+
+.health-card {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 40px 30px; /* 加大内边距 */
     border-radius: 25px;
-    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(76, 175, 80, 0.15);
+    width: 100%;
+    text-align: center;
+    border: 1px solid #e8f5e9;
+    margin-bottom: 40px;
+}
+#health-display { font-size: 1.2rem; line-height: 1.8; color: #444; font-weight: 500; }
+
+/* 装饰性的小图标栏 (假装有功能，其实是装饰) */
+.health-stats {
+    display: flex; gap: 15px; margin-bottom: 30px; opacity: 0.6;
+}
+.stat-item { background: #e8f5e9; padding: 8px 15px; border-radius: 20px; font-size: 0.8rem; color: #2e7d32; }
+
+
+/* === Module 2: Book (水晶球风格) === */
+#book-input-area { width: 100%; text-align: center; }
+#question-input {
+    width: 100%; padding: 20px; border-radius: 20px;
+    border: none; background: white;
+    box-shadow: 0 5px 15px rgba(156, 39, 176, 0.1);
+    text-align: center; margin-bottom: 30px; font-size: 1.1rem;
+    box-sizing: border-box;
+}
+#book-result { width: 100%; }
+.answer-card {
+    background: white; padding: 40px 30px; border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(156, 39, 176, 0.15);
+    text-align: center; border: 2px solid #f3e5f5;
+    margin-bottom: 30px;
+}
+.answer-text { font-size: 1.8rem; margin-top: 20px; display: block; }
+
+
+/* === Module 3: Chat (堆叠卡片风格) === */
+.chat-container {
+    width: 100%; height: 400px; /* 强制高度 */
+    display: flex; justify-content: center; align-items: center;
+    position: relative;
+}
+
+/* 增加两张假卡片做背景，看起来像一叠牌 */
+.stack-bg {
+    position: absolute; width: 260px; height: 340px; border-radius: 20px;
+    background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    z-index: 0;
+}
+.stack-1 { transform: rotate(-5deg); opacity: 0.8; }
+.stack-2 { transform: rotate(5deg); opacity: 0.6; }
+
+.topic-card {
+    width: 280px; height: 360px; /* 卡片变更大 */
+    z-index: 10;
+    /* ... 之前的样式保留 ... */
+    border-radius: 25px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    box-shadow: 0 15px 30px rgba(255, 152, 0, 0.2);
+    cursor: pointer; text-align: center; padding: 30px; box-sizing: border-box;
     transition: transform 0.2s;
 }
 
-button:hover {
-    background-color: #ec407a;
-    transform: scale(1.05);
+.topic-card.cover { background: linear-gradient(135deg, #ff9800, #ffb74d); color: white; }
+.topic-card.content { background: white; border: 4px solid #fff3e0; }
+
+/* =========================================
+   [2025-05-25] Modern App Navigation Bar 
+   覆盖掉之前简陋的 .bottom-nav 样式
+   ========================================= */
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 85px; /* 稍微增高，适应手机操作 */
+    background: rgba(255, 255, 255, 0.98); /* 纯白背景，带一点点透 */
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.05); /* 顶部柔和阴影，去掉生硬边框 */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 25px 25px 0 0; /* 顶部圆角，更有设计感 */
+    z-index: 1000;
+    padding-bottom: 15px; /* 适配全面屏手机底部的黑条 */
+    box-sizing: border-box;
+    backdrop-filter: blur(10px); /* 磨砂玻璃质感 */
 }
 
-.date-text {
+/* 按键样式重置：去掉所有默认的灰色背景和边框 */
+.nav-item {
+    background: transparent !important; /* 强制透明 */
+    border: none !important;            /* 强制无边框 */
+    outline: none;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #cfd8dc; /* 默认状态：浅灰色 (未选中) */
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    -webkit-tap-highlight-color: transparent; /* 去掉手机点击时的蓝色背景块 */
+}
+
+/* 图标样式 */
+.nav-item .icon {
+    font-size: 28px;
+    margin-bottom: 6px;
+    filter: grayscale(100%); /* 未选中时图标变灰，更高级 */
+    opacity: 0.6;
+    transition: all 0.3s;
+}
+
+/* 文字样式 */
+.nav-item .label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+/* === 选中状态 (Active) === */
+.nav-item.active {
+    transform: translateY(-5px); /* 选中时轻轻上浮 */
+}
+
+.nav-item.active .icon {
+    filter: grayscale(0%); /* 选中时恢复彩色 */
+    opacity: 1;
+    transform: scale(1.1); /* 图标放大一点点 */
+}
+
+/* 分别定义三个按钮选中时的颜色 */
+.nav-item:nth-child(1).active { color: #4caf50; text-shadow: 0 0 15px rgba(76,175,80,0.3); } /* 健康绿 */
+.nav-item:nth-child(2).active { color: #9c27b0; text-shadow: 0 0 15px rgba(156,39,176,0.3); } /* 答案紫 */
+.nav-item:nth-child(3).active { color: #ff9800; text-shadow: 0 0 15px rgba(255,152,0,0.3); } /* 聊聊橙 */
+
+/* =========================================
+   [2025-05-25] Modern Button Styles 
+   美化页面中间的操作按钮
+   ========================================= */
+
+/* 1. 核心按钮样式 (清除默认丑样式) */
+.action-btn {
+    appearance: none;          /* 清除系统默认外观 */
+    -webkit-appearance: none;
+    border: none;              /* 去掉黑边框 */
+    outline: none;             /* 去掉点击时的蓝框 */
+    color: white;              /* 文字变白 */
+    font-size: 16px;           /* 字号适中 */
+    font-weight: 600;          /* 字体加粗 */
+    letter-spacing: 1px;       /* 增加字间距 */
+    padding: 15px 40px;        /* 增加内边距，让按钮胖一点 */
+    border-radius: 50px;       /* 变成圆润的胶囊形状 */
+    cursor: pointer;
+    transition: all 0.2s ease; /* 添加点击缩放动画 */
+    width: 80%;                /* 宽度占屏幕的80%，更大气 */
+    max-width: 300px;
+    display: block;
+    margin: 20px auto 0;       /* 居中显示 */
+    position: relative;
+    overflow: hidden;
+}
+
+/* 点击时的按压效果 */
+.action-btn:active {
+    transform: scale(0.95);
+    opacity: 0.9;
+}
+
+/* 2. 为不同模块定制专属颜色 (渐变色) */
+
+/* 健康页按钮：清新绿渐变 */
+.health-btn {
+    background: linear-gradient(135deg, #66bb6a, #43a047);
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3); /* 绿色投影 */
+}
+
+/* 答案书按钮：神秘紫渐变 */
+.book-btn {
+    background: linear-gradient(135deg, #ab47bc, #8e24aa);
+    box-shadow: 0 8px 20px rgba(156, 39, 176, 0.3); /* 紫色投影 */
+}
+
+/* 3. 次级按钮样式 (如“再问一个”、“换一个话题”) */
+.outline-btn, .small-btn {
+    background: transparent;
+    border: 2px solid #ccc;
     color: #888;
-    margin-top: 15px;
-    font-size: 0.9rem;
+    padding: 8px 25px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.2s;
+}
+
+/* 答案书的次级按钮 */
+.outline-btn {
+    border-color: #ce93d8;
+    color: #9c27b0;
+}
+.outline-btn:hover {
+    background: #f3e5f5;
+}
+
+/* 聊天页的小按钮 */
+.small-btn {
+    background: #fff3e0;
+    color: #ef6c00;
+    border: none;
+    font-weight: bold;
+    box-shadow: 0 2px 10px rgba(239, 108, 0, 0.1);
+}
+
+/* =========================================
+   [2025-05-25] Book of Answers - Premium UI 
+   覆盖之前的简陋样式，让答案看起来更贵
+   ========================================= */
+
+/* 1. 修复按钮不居中问题 (暴力强制居中) */
+.outline-btn {
+    display: block !important;
+    margin: 30px auto 0 auto !important; /* 上边距30，左右自动居中 */
+    width: fit-content;                  /* 宽度自适应文字 */
+    min-width: 120px;
+    text-align: center;
+    border: 2px solid #ba68c8;
+    color: #9c27b0;
+    font-weight: bold;
+    background: rgba(255,255,255,0.8);
+}
+.outline-btn:hover {
+    background: #f3e5f5;
+    transform: translateY(-2px);
+}
+
+/* 2. 答案卡片大装修 (极光渐变风) */
+.answer-card {
+    /* 背景：淡淡的紫粉色渐变，像水晶 */
+    background: linear-gradient(135deg, #ffffff 0%, #f3e5f5 100%);
+    border: 3px solid #e1bee7;         /* 边框加粗一点 */
+    border-radius: 30px;               /* 更圆润 */
+    padding: 40px 30px;
+    box-shadow: 
+        0 15px 35px rgba(156, 39, 176, 0.15), /* 外部紫色投影 */
+        inset 0 0 20px rgba(255, 255, 255, 0.8); /* 内部高光 */
+    text-align: center;
+    position: relative;
+    overflow: hidden; /* 防止光效溢出 */
+}
+
+/* 3. 标签美化 (YOUR QUESTION / THE ANSWER) */
+.card-label {
+    font-size: 0.75rem;
+    color: #ce93d8; /* 浅紫色 */
+    letter-spacing: 3px; /* 字间距拉大，显得高级 */
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* 4. 问题文字优化 */
+#q-text {
+    font-size: 1.1rem;
+    color: #555;
+    font-style: italic; /* 斜体 */
+    font-family: 'Georgia', serif; /* 衬线体，更有书卷气 */
+    margin-bottom: 25px;
+    display: block;
+}
+
+/* 5. 答案文字特效 (流光渐变字) */
+.answer-text {
+    font-size: 2.2rem; /* 字号加大 */
+    line-height: 1.4;
+    font-weight: 800;
+    margin: 20px 0;
+    /* 字体渐变色 */
+    background: linear-gradient(45deg, #7b1fa2, #e91e63);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    /* 入场动画 */
+    animation: textPop 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 6. 装饰性引号 (增加设计感) */
+.answer-card::before {
+    content: "“";
+    position: absolute;
+    top: 10px; left: 20px;
+    font-size: 100px;
+    color: #e1bee7;
+    opacity: 0.4;
+    font-family: serif;
+}
+.answer-card::after {
+    content: "”";
+    position: absolute;
+    bottom: -40px; right: 20px;
+    font-size: 100px;
+    color: #e1bee7;
+    opacity: 0.4;
+    font-family: serif;
+}
+
+/* 分割线优化 */
+.answer-card hr, 
+.answer-card div[style*="height: 1px"] { /* 兼容之前的写法 */
+    background: linear-gradient(to right, transparent, #e1bee7, transparent) !important;
+    height: 2px !important;
+    margin: 20px 0 !important;
+    opacity: 0.5;
+}
+
+/* 动画定义 */
+@keyframes textPop {
+    from { transform: scale(0.8); opacity: 0; filter: blur(5px); }
+    to { transform: scale(1); opacity: 1; filter: blur(0); }
+}
+
+/* =========================================
+   [2025-05-25 V2] 终极视觉优化补丁
+   包含：科幻加载动画 + 卡片完美居中修复
+   建议直接粘贴到 style.css 最末尾
+   ========================================= */
+
+/* --- 1. 科幻加载界面 (Signal Loader) --- */
+#book-loading {
+    text-align: center;
+    margin: 60px auto;
+}
+
+.signal-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signal-core {
+    font-size: 50px;
+    z-index: 10;
+    animation: pulse 2s infinite;
+}
+
+/* 信号波纹 */
+.signal-wave {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 4px solid rgba(156, 39, 176, 0.6);
+    opacity: 0;
+    animation: waveEmit 3s infinite cubic-bezier(0.1, 0.6, 0.2, 1);
+}
+
+/* 让波纹错开播放 */
+.wave1 { animation-delay: 0s; }
+.wave2 { animation-delay: 1s; }
+.wave3 { animation-delay: 2s; }
+
+.loading-text {
+    color: #9c27b0;
+    font-weight: bold;
+    letter-spacing: 2px;
+    font-size: 1.1rem;
+    animation: blink 1.5s infinite;
+}
+
+/* 动画定义 */
+@keyframes waveEmit {
+    0% { transform: scale(0.1); opacity: 1; }
+    100% { transform: scale(2.5); opacity: 0; }
+}
+@keyframes pulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px #e1bee7); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 15px #9c27b0); }
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+
+/* --- 2. 答案卡片完美居中修复 (覆盖旧样式) --- */
+
+.answer-card {
+    /* 改用 Flex 布局来实现绝对居中 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 垂直居中 */
+    align-items: center;     /* 水平居中 */
+    
+    min-height: 320px;       /* 给一个最小高度，确保有空间居中 */
+    padding: 40px 30px;      /* 保持内边距 */
+    
+    /* 继承之前的华丽样式 */
+    background: linear-gradient(135deg, #ffffff 0%, #f3e5f5 100%);
+    border: 3px solid #e1bee7;
+    border-radius: 30px;
+    box-shadow: 0 15px 35px rgba(156, 39, 176, 0.15), inset 0 0 20px rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 重置内部元素的边距，让 Flexbox 来控制间距 */
+.card-label, #q-text, .answer-text {
+    margin: 0; /* 清空默认边距 */
+    width: 100%; /* 占满宽度以便居中对齐 */
+}
+
+/* 重新精细调整间距 */
+.card-label:first-child { margin-bottom: 15px; } /* "YOUR QUESTION" 下面的间距 */
+#q-text { margin-bottom: 30px; } /* 问题和分割线之间的间距 */
+
+/* 分割线 */
+.answer-card .divider, hr {
+    width: 80% !important; /* 宽度稍微收一点，更好看 */
+    margin: 0 auto 30px auto !important; /* 上下间距30，左右自动居中 */
+}
+
+.card-label:nth-child(4) { margin-bottom: 15px; } /* "THE ANSWER" 下面的间距 */
+
+/* 答案文字 */
+.answer-text {
+    margin-bottom: 0; /* 下方不需要额外边距了，因为整体居中了 */
+}
+
+/* =========================================
+   [2025-05-25 V3] 强力居中修正
+   使用 Flex Gap 技术，修复视觉偏差
+   ========================================= */
+
+.answer-card {
+    /* 1. 布局模式：垂直方向的 Flex */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 垂直绝对居中 */
+    align-items: center;     /* 水平绝对居中 */
+    
+    /* 2. 关键：用 gap 统一控制间距，不再用 margin 乱顶 */
+    gap: 15px; 
+    
+    /* 3. 尺寸与边距 */
+    min-height: 320px;       /* 保持高度 */
+    padding: 40px;           /* 上下左右内边距相等 */
+    box-sizing: border-box;  /* 确保内边距不撑大盒子 */
+    
+    /* 4. 外观 (保持不变) */
+    background: linear-gradient(135deg, #ffffff 0%, #f3e5f5 100%);
+    border: 3px solid #e1bee7;
+    border-radius: 30px;
+    box-shadow: 0 15px 35px rgba(156, 39, 176, 0.15), inset 0 0 20px rgba(255, 255, 255, 0.8);
+    position: relative;
+}
+
+/* --- 强制清除内部所有元素的默认边距 --- */
+.answer-card p, 
+.answer-card h2, 
+.answer-card div, 
+.answer-card span {
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: center; /* 强制文字居中 */
+    width: 100%;        /* 占满整行 */
+}
+
+/* --- 重新定义各个元素的具体样式 --- */
+
+/* 小标签 (YOUR QUESTION / THE ANSWER) */
+.card-label {
+    font-size: 0.7rem;
+    color: #ce93d8;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+/* 问题文字 */
+#q-text {
+    font-size: 1.2rem;
+    color: #555;
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    min-height: 1.5em; /* 防止没字时塌陷 */
+}
+
+/* 分割线 (显式修复) */
+.divider {
+    height: 2px !important;
+    width: 60px !important; /* 短一点更精致 */
+    background: #e1bee7 !important;
+    opacity: 0.6;
+    margin: 10px 0 !important; /* 稍微给分割线一点独立的呼吸空间 */
+}
+
+/* 答案文字 */
+.answer-text {
+    font-size: 2.4rem;
+    line-height: 1.2;
+    font-weight: 800;
+    /* 渐变字 */
+    background: linear-gradient(45deg, #7b1fa2, #e91e63);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textPop 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* --- 装饰性引号 (绝对定位，不占空间，不影响居中) --- */
+.answer-card::before {
+    content: "“";
+    position: absolute;
+    top: 10px; left: 20px;
+    font-size: 80px;
+    color: #e1bee7;
+    opacity: 0.3;
+    font-family: serif;
+    pointer-events: none; /* 防止遮挡点击 */
+}
+.answer-card::after {
+    content: "”";
+    position: absolute;
+    bottom: -30px; right: 20px;
+    font-size: 80px;
+    color: #e1bee7;
+    opacity: 0.3;
+    font-family: serif;
+    pointer-events: none;
+}
+
+/* =========================================
+   [2025-05-25] Global Top Bar
+   全局置顶标题栏样式
+   ========================================= */
+
+/* 1. 标题栏样式 */
+.top-bar {
+    position: fixed;       /* 固定在顶部，不随页面滚动 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;          /* 高度 */
+    background: rgba(255, 255, 255, 0.9); /* 半透明白底 */
+    backdrop-filter: blur(10px);          /* 磨砂玻璃特效 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;         /* 确保它在所有层级之上 */
+    box-shadow: 0 1px 10px rgba(0,0,0,0.05); /* 微微的投影 */
+    
+    /* 字体样式 */
+    font-size: 16px;
+    font-weight: bold;
+    color: #444;
+    letter-spacing: 1px;
+}
+
+/* 2. 关键：把身体往下推，防止内容被标题栏挡住 */
+body {
+    padding-top: 60px !important; /* 50px栏高 + 10px间距 */
+}
+
+/* 3. 小优化：微调原来的 Header，让它别离顶部太远 */
+header {
+    margin-top: 10px; /* 稍微留点呼吸感即可 */
+    padding-top: 0;
+}
+
+/* =========================================
+   [2025-05-25 V5] Top Bar Resize
+   放大标题栏，增加品牌感
+   ========================================= */
+
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    
+    /* 1. 高度加高：从 50px -> 65px */
+    height: 65px;
+    
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05); /* 投影稍微明显一点 */
+    
+    /* 2. 字体大升级 */
+    font-size: 22px;      /* 从 16px -> 22px (肉眼可见的大) */
+    font-weight: 900;     /* 特粗字体，像 Logo 一样 */
+    color: #333;          /* 深黑色，更清晰 */
+    letter-spacing: 2px;  /* 字间距拉开，更有呼吸感 */
+    font-family: 'Microsoft YaHei', sans-serif;
+}
+
+/* 3. 配合调整：身体下移，防止被更大的标题栏挡住 */
+body {
+    padding-top: 80px !important; /* 65px栏高 + 15px间距 */
 }
